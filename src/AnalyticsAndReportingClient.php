@@ -21,7 +21,7 @@ final class AnalyticsAndReportingClient
 
         $auth = new BaseBearerTokenAuthenticationProvider(new KiotaAuthProvider($config));
 
-        $analyticsAdapter = new GuzzleRequestAdapter($auth, client: $guzzle);
+        $analyticsAdapter = new GuzzleRequestAdapter($auth, guzzleClient: $guzzle);
         $analyticsAdapter->setBaseUrl($config->analyticsBaseUrl);
         $this->analytics = new AnalyticsClient(new AnalyticsApiClient($analyticsAdapter), $config);
     }
