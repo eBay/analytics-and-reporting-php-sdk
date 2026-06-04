@@ -53,7 +53,7 @@ final class AnalyticsAndReportingClient
                                 "[REST %d] %s %s\n",
                                 $response->getStatusCode(),
                                 $request->getMethod(),
-                                $request->getUri(),
+                                str_replace(["\r", "\n"], ' ', (string) $request->getUri()),
                             ));
                             $body = (string) $response->getBody();
                             fwrite(STDERR, "[REST body] $body\n");
