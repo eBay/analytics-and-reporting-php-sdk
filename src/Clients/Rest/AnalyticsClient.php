@@ -39,25 +39,16 @@ final class AnalyticsClient
     ) {}
 
     /**
-     * Merges default + per-call headers; default headers do not overwrite existing values.
+     * Merges default + per-call headers; per-call headers override defaults.
      *
      * @return array<string,string>
      */
     private function buildHeaders(?RequestOptions $requestOptions): array
     {
-        $headers = [];
-
-        foreach ($this->config->defaultRequestOptions->headers as $key => $value) {
-            $headers[$key] = $value;
-        }
-
-        if ($requestOptions !== null) {
-            foreach ($requestOptions->headers as $key => $value) {
-                $headers[$key] = $value;
-            }
-        }
-
-        return $headers;
+        return array_merge(
+            $this->config->defaultRequestOptions->headers,
+            $requestOptions?->headers ?? []
+        );
     }
 
     /**
