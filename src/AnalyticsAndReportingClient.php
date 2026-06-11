@@ -18,12 +18,8 @@ namespace EBay\AnalyticsAndReporting;
 
 use EBay\AnalyticsAndReporting\Clients\Rest\AnalyticsClient;
 use EBay\AnalyticsAndReporting\Configuration\AnalyticsAndReportingConfiguration;
-use EBay\AnalyticsAndReporting\Configuration\KiotaAuthProvider;
-use EBay\AnalyticsAndReporting\Generated\Analytics\AnalyticsApiClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
-use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
-use Microsoft\Kiota\Http\GuzzleRequestAdapter;
 
 final class AnalyticsAndReportingClient
 {
@@ -33,11 +29,7 @@ final class AnalyticsAndReportingClient
     {
         $guzzle ??= self::buildGuzzle($config);
 
-        $auth = new BaseBearerTokenAuthenticationProvider(new KiotaAuthProvider($config));
-
-        $analyticsAdapter = new GuzzleRequestAdapter($auth, guzzleClient: $guzzle);
-        $analyticsAdapter->setBaseUrl($config->analyticsBaseUrl);
-        $this->analytics = new AnalyticsClient(new AnalyticsApiClient($analyticsAdapter), $config);
+        $this->analytics = new AnalyticsClient($guzzle, $config);
     }
 
     private static function buildGuzzle(AnalyticsAndReportingConfiguration $config): GuzzleClient

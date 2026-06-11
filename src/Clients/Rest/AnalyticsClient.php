@@ -17,8 +17,8 @@
 namespace EBay\AnalyticsAndReporting\Clients\Rest;
 
 use EBay\AnalyticsAndReporting\Configuration\AnalyticsAndReportingConfiguration;
+use EBay\AnalyticsAndReporting\Configuration\KiotaAuthProvider;
 use EBay\AnalyticsAndReporting\Configuration\RequestOptions;
-use EBay\AnalyticsAndReporting\Configuration\TokenContext;
 use EBay\AnalyticsAndReporting\Generated\Analytics\AnalyticsApiClient;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetQueryParameters;
@@ -30,26 +30,16 @@ use EBay\AnalyticsAndReporting\Generated\Analytics\Models\FindSellerStandardsPro
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\GetCustomerServiceMetricResponse;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\StandardsProfile;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Report;
+use GuzzleHttp\Client as GuzzleClient;
+use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
+use Microsoft\Kiota\Http\GuzzleRequestAdapter;
 
 final class AnalyticsClient
 {
     public function __construct(
-        private readonly AnalyticsApiClient $kiota,
+        private readonly GuzzleClient $guzzle,
         private readonly AnalyticsAndReportingConfiguration $config,
     ) {}
-
-    /**
-     * Merges default + per-call headers; per-call headers override defaults.
-     *
-     * @return array<string,string>
-     */
-    private function buildHeaders(?RequestOptions $requestOptions): array
-    {
-        return array_merge(
-            $this->config->defaultRequestOptions->headers,
-            $requestOptions?->headers ?? []
-        );
-    }
 
     /**
      * Retrieves all standards profiles for the seller.
@@ -62,11 +52,11 @@ final class AnalyticsClient
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
     ): ?FindSellerStandardsProfilesResponse {
-        return TokenContext::runWith($accessToken, function () use ($requestOptions) {
-            $headers = $this->buildHeaders($requestOptions);
-            $config = $headers !== [] ? new Seller_standards_profileRequestBuilderGetRequestConfiguration($headers) : null;
-            return $this->kiota->seller_standards_profile()->get($config)->wait();
-        });
+        $headers = $this->mergedHeaders($requestOptions);
+        $config = $headers !== [] ? new Seller_standards_profileRequestBuilderGetRequestConfiguration($headers) : null;
+        return $this->call($accessToken, fn($api) =>
+            $api->seller_standards_profile()->get($config)->wait()
+        );
     }
 
     /**
@@ -86,21 +76,20 @@ final class AnalyticsClient
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
     ): ?GetCustomerServiceMetricResponse {
-        return TokenContext::runWith($accessToken, function () use ($customerServiceMetricType, $evaluationType, $evaluationMarketplaceId, $requestOptions) {
-            $headers = $this->buildHeaders($requestOptions);
-            $config = new WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
-                headers: $headers !== [] ? $headers : null,
-                queryParameters: $evaluationMarketplaceId !== null
-                    ? new WithEvaluation_typeItemRequestBuilderGetQueryParameters($evaluationMarketplaceId)
-                    : null,
-            );
-            return $this->kiota
-                ->customer_service_metric()
+        $headers = $this->mergedHeaders($requestOptions);
+        $config = new WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
+            headers: $headers !== [] ? $headers : null,
+            queryParameters: $evaluationMarketplaceId !== null
+                ? new WithEvaluation_typeItemRequestBuilderGetQueryParameters($evaluationMarketplaceId)
+                : null,
+        );
+        return $this->call($accessToken, fn($api) =>
+            $api->customer_service_metric()
                 ->byCustomer_service_metric_type($customerServiceMetricType)
                 ->byEvaluation_type($evaluationType)
                 ->get($config)
-                ->wait();
-        });
+                ->wait()
+        );
     }
 
     /**
@@ -118,16 +107,15 @@ final class AnalyticsClient
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
     ): ?StandardsProfile {
-        return TokenContext::runWith($accessToken, function () use ($program, $cycle, $requestOptions) {
-            $headers = $this->buildHeaders($requestOptions);
-            $config = $headers !== [] ? new WithCycleItemRequestBuilderGetRequestConfiguration($headers) : null;
-            return $this->kiota
-                ->seller_standards_profile()
+        $headers = $this->mergedHeaders($requestOptions);
+        $config = $headers !== [] ? new WithCycleItemRequestBuilderGetRequestConfiguration($headers) : null;
+        return $this->call($accessToken, fn($api) =>
+            $api->seller_standards_profile()
                 ->byProgram($program)
                 ->byCycle($cycle)
                 ->get($config)
-                ->wait();
-        });
+                ->wait()
+        );
     }
 
     /**
@@ -149,13 +137,39 @@ final class AnalyticsClient
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
     ): ?Report {
-        return TokenContext::runWith($accessToken, function () use ($dimension, $filter, $metric, $sort, $requestOptions) {
-            $headers = $this->buildHeaders($requestOptions);
-            $config = new Traffic_reportRequestBuilderGetRequestConfiguration(
-                headers: $headers !== [] ? $headers : null,
-                queryParameters: new Traffic_reportRequestBuilderGetQueryParameters($dimension, $filter, $metric, $sort),
-            );
-            return $this->kiota->traffic_report()->get($config)->wait();
-        });
+        $headers = $this->mergedHeaders($requestOptions);
+        $config = new Traffic_reportRequestBuilderGetRequestConfiguration(
+            headers: $headers !== [] ? $headers : null,
+            queryParameters: new Traffic_reportRequestBuilderGetQueryParameters($dimension, $filter, $metric, $sort),
+        );
+        return $this->call($accessToken, fn($api) =>
+            $api->traffic_report()->get($config)->wait()
+        );
+    }
+
+    private function call(?string $accessToken, callable $op): mixed
+    {
+        $token = $accessToken ?? $this->config->accessToken
+            ?? throw new \RuntimeException('No access token. Pass $accessToken per-call or set AnalyticsAndReportingConfiguration::$accessToken.');
+        return $op($this->buildApiClient($token));
+    }
+
+    private function buildApiClient(string $token): AnalyticsApiClient
+    {
+        $auth = new BaseBearerTokenAuthenticationProvider(
+            new KiotaAuthProvider($token, $this->config->getAllowedHosts())
+        );
+        $adapter = new GuzzleRequestAdapter($auth, guzzleClient: $this->guzzle);
+        $adapter->setBaseUrl($this->config->analyticsBaseUrl);
+        return new AnalyticsApiClient($adapter);
+    }
+
+    /** @return array<string,string> */
+    private function mergedHeaders(?RequestOptions $requestOptions): array
+    {
+        return array_merge(
+            $this->config->defaultRequestOptions->headers,
+            $requestOptions?->headers ?? []
+        );
     }
 }
