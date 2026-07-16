@@ -41,4 +41,12 @@ final class KiotaAuthProvider implements AccessTokenProvider
     {
         return $this->allowedHostsValidator;
     }
+
+    public function __debugInfo(): array
+    {
+        return [
+            'token'                 => '***',
+            'allowedHostsValidator' => $this->allowedHostsValidator,
+        ];
+    }
 }
