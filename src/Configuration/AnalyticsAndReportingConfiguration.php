@@ -18,17 +18,13 @@ namespace EBay\AnalyticsAndReporting\Configuration;
 
 final class AnalyticsAndReportingConfiguration
 {
-    public string $analyticsBaseUrl = 'https://api.ebay.com/sell/analytics/v1';
+    public readonly RequestOptions $defaultRequestOptions;
 
-    /** Static fallback token; per-call token takes precedence. */
-    public ?string $accessToken = null;
-
-    public bool $diagnosticLogging = false;
-
-    public RequestOptions $defaultRequestOptions;
-
-    public function __construct()
-    {
+    public function __construct(
+        public readonly string  $analyticsBaseUrl  = 'https://api.ebay.com/sell/analytics/v1',
+        public readonly ?string $accessToken       = null,
+        public readonly bool    $diagnosticLogging = false,
+    ) {
         $this->defaultRequestOptions = new RequestOptions();
     }
 
