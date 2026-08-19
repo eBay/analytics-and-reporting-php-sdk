@@ -1,5 +1,6 @@
 {
     "name": "ebay/analytics-and-reporting-php-sdk",
+    "version": "0.1.0",
     "description": "AnalyticsAndReporting PHP SDK",
     "type": "library",
     "require": {
