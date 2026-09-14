@@ -32,7 +32,7 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $endDate End date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * @var string|null $endDate The end date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
     */
     private ?string $endDate = null;
     
@@ -42,9 +42,9 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     private ?string $evaluationDate = null;
     
     /**
-     * @var string|null $evaluationType This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul> For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:EvaluationTypeEnum'>eBay API documentation</a>
+     * @var EvaluationTypeEnum|null $evaluationType This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul>
     */
-    private ?string $evaluationType = null;
+    private ?EvaluationTypeEnum $evaluationType = null;
     
     /**
      * @var string|null $startDate The start date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.  <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-04T07:09:00.000Z</code>
@@ -76,7 +76,7 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the endDate property value. End date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * Gets the endDate property value. The end date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
      * @return string|null
     */
     public function getEndDate(): ?string {
@@ -92,10 +92,10 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the evaluationType property value. This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul> For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:EvaluationTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the evaluationType property value. This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul>
+     * @return EvaluationTypeEnum|null
     */
-    public function getEvaluationType(): ?string {
+    public function getEvaluationType(): ?EvaluationTypeEnum {
         return $this->evaluationType;
     }
 
@@ -108,7 +108,7 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
         return  [
             'endDate' => fn(ParseNode $n) => $o->setEndDate($n->getStringValue()),
             'evaluationDate' => fn(ParseNode $n) => $o->setEvaluationDate($n->getStringValue()),
-            'evaluationType' => fn(ParseNode $n) => $o->setEvaluationType($n->getStringValue()),
+            'evaluationType' => fn(ParseNode $n) => $o->setEvaluationType($n->getEnumValue(EvaluationTypeEnum::class)),
             'startDate' => fn(ParseNode $n) => $o->setStartDate($n->getStringValue()),
         ];
     }
@@ -128,7 +128,7 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     public function serialize(SerializationWriter $writer): void {
         $writer->writeStringValue('endDate', $this->getEndDate());
         $writer->writeStringValue('evaluationDate', $this->getEvaluationDate());
-        $writer->writeStringValue('evaluationType', $this->getEvaluationType());
+        $writer->writeEnumValue('evaluationType', $this->getEvaluationType());
         $writer->writeStringValue('startDate', $this->getStartDate());
         $writer->writeAdditionalData($this->getAdditionalData());
     }
@@ -142,7 +142,7 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the endDate property value. End date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * Sets the endDate property value. The end date and time of the transaction lookback range. All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
      * @param string|null $value Value to set for the endDate property.
     */
     public function setEndDate(?string $value): void {
@@ -158,10 +158,10 @@ class EvaluationCycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the evaluationType property value. This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul> For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:EvaluationTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the evaluationType property.
+     * Sets the evaluationType property value. This field specifies the transaction <i>lookback period</i> used for the evaluation. <br><br>The <b>evaluation_type</b> value specified in the request is returned in this field. There are two possible values:  <ul><li><code>CURRENT</code> &ndash; A monthly evaluation that occurs on the 20th of every month.</li> <li><code>PROJECTED</code> &ndash; A daily evaluation that provides a projection of how the seller is currently performing with regards to the upcoming evaluation period.</li></ul>
+     * @param EvaluationTypeEnum|null $value Value to set for the evaluationType property.
     */
-    public function setEvaluationType(?string $value): void {
+    public function setEvaluationType(?EvaluationTypeEnum $value): void {
         $this->evaluationType = $value;
     }
 

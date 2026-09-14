@@ -27,7 +27,7 @@ class WithCustomer_service_metric_typeItemRequestBuilder extends BaseRequestBuil
 {
     /**
      * Gets an item from the EBay/AnalyticsAndReporting/Generated/Analytics.customer_service_metric.item.item collection
-     * @param string $evaluation_type Use this path parameter to specify the evaluation period to use for the performance metrics. See <a href="/api-docs/sell/analytics/types/api:EvaluationTypeEnum" target="_blank"> EvaluationTypeEnum</a> for more information on the supported values.
+     * @param string $evaluation_type Use this path parameter to specify the evaluation period to use for the performance metrics. See <a href="/develop/api/sell/analytics_api#sell-analytics_api-customer_service_metric-getcustomerservicemetric.evaluationtypeenum"> EvaluationTypeEnum</a> for more information on the supported values.
      * @return WithEvaluation_typeItemRequestBuilder
     */
     public function byEvaluation_type(string $evaluation_type): WithEvaluation_typeItemRequestBuilder {

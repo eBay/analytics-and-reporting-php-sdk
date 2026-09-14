@@ -27,7 +27,7 @@ class WithProgramItemRequestBuilder extends BaseRequestBuilder
 {
     /**
      * Gets an item from the EBay/AnalyticsAndReporting/Generated/Analytics.seller_standards_profile.item.item collection
-     * @param string $cycle This path parameter is used to specify the cycle for which metrics and metadata will be retrieved.<br><br>See <a href="/api-docs/sell/analytics/types/ssp:CycleTypeEnum" target="_blank">CycleTypeEnum</a> for a list of supported values.
+     * @param string $cycle This path parameter is used to specify the cycle for which metrics and metadata will be retrieved.<br><br>See <a href="/develop/api/sell/analytics_api#sell-analytics_api-seller_standards_profile-getsellerstandardsprofile.cycletypeenum">CycleTypeEnum</a> for a list of supported values.
      * @return WithCycleItemRequestBuilder
     */
     public function byCycle(string $cycle): WithCycleItemRequestBuilder {

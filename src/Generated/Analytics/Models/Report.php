@@ -37,12 +37,12 @@ class Report implements AdditionalDataHolder, Parsable
     private ?array $dimensionMetadata = null;
     
     /**
-     * @var string|null $endDate   <br><br>The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <a href="#response.lastUpdatedDate">lastUpdatedDate</a> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
+     * @var string|null $endDate The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <b>lastUpdatedDate</b> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
     */
     private ?string $endDate = null;
     
     /**
-     * @var Header|null $header Type that defines the headers for the dimension keys and metrics returned in the report.
+     * @var Header|null $header A complex type containing the header for the report.
     */
     private ?Header $header = null;
     
@@ -62,7 +62,7 @@ class Report implements AdditionalDataHolder, Parsable
     private ?string $startDate = null;
     
     /**
-     * @var array<Error>|null $warnings An array of any process errors or warnings that were generated during the processing of the call processing.
+     * @var array<ErrorDetailV3>|null $warnings An array of any process errors or warnings that were generated during the processing of the call processing.
     */
     private ?array $warnings = null;
     
@@ -99,7 +99,7 @@ class Report implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the endDate property value.   <br><br>The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <a href="#response.lastUpdatedDate">lastUpdatedDate</a> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
+     * Gets the endDate property value. The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <b>lastUpdatedDate</b> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
      * @return string|null
     */
     public function getEndDate(): ?string {
@@ -119,12 +119,12 @@ class Report implements AdditionalDataHolder, Parsable
             'lastUpdatedDate' => fn(ParseNode $n) => $o->setLastUpdatedDate($n->getStringValue()),
             'records' => fn(ParseNode $n) => $o->setRecords($n->getCollectionOfObjectValues([Record::class, 'createFromDiscriminatorValue'])),
             'startDate' => fn(ParseNode $n) => $o->setStartDate($n->getStringValue()),
-            'warnings' => fn(ParseNode $n) => $o->setWarnings($n->getCollectionOfObjectValues([Error::class, 'createFromDiscriminatorValue'])),
+            'warnings' => fn(ParseNode $n) => $o->setWarnings($n->getCollectionOfObjectValues([ErrorDetailV3::class, 'createFromDiscriminatorValue'])),
         ];
     }
 
     /**
-     * Gets the header property value. Type that defines the headers for the dimension keys and metrics returned in the report.
+     * Gets the header property value. A complex type containing the header for the report.
      * @return Header|null
     */
     public function getHeader(): ?Header {
@@ -157,7 +157,7 @@ class Report implements AdditionalDataHolder, Parsable
 
     /**
      * Gets the warnings property value. An array of any process errors or warnings that were generated during the processing of the call processing.
-     * @return array<Error>|null
+     * @return array<ErrorDetailV3>|null
     */
     public function getWarnings(): ?array {
         return $this->warnings;
@@ -195,7 +195,7 @@ class Report implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the endDate property value.   <br><br>The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <a href="#response.lastUpdatedDate">lastUpdatedDate</a> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
+     * Sets the endDate property value. The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock.  <br><br>If you specify an end date that is beyond the <b>lastUpdatedDate</b> value, eBay returns a report that contains data only up to the lastUpdateDate date. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-20T07:09:00.000Z</code>
      * @param string|null $value Value to set for the endDate property.
     */
     public function setEndDate(?string $value): void {
@@ -203,7 +203,7 @@ class Report implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the header property value. Type that defines the headers for the dimension keys and metrics returned in the report.
+     * Sets the header property value. A complex type containing the header for the report.
      * @param Header|null $value Value to set for the header property.
     */
     public function setHeader(?Header $value): void {
@@ -236,7 +236,7 @@ class Report implements AdditionalDataHolder, Parsable
 
     /**
      * Sets the warnings property value. An array of any process errors or warnings that were generated during the processing of the call processing.
-     * @param array<Error>|null $value Value to set for the warnings property.
+     * @param array<ErrorDetailV3>|null $value Value to set for the warnings property.
     */
     public function setWarnings(?array $value): void {
         $this->warnings = $value;

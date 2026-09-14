@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * A complex type that defines an error and error message.
+ * Used to specify information relevant to the end user/client.
 */
 class ErrorParameter implements AdditionalDataHolder, Parsable 
 {
@@ -32,12 +32,12 @@ class ErrorParameter implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $name Name of the entity that threw the error.
+     * @var string|null $name The name of the parameter that caused the error.
     */
     private ?string $name = null;
     
     /**
-     * @var string|null $value A description of the error.
+     * @var string|null $value The value of the parameter that caused the error.
     */
     private ?string $value = null;
     
@@ -78,7 +78,7 @@ class ErrorParameter implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the name property value. Name of the entity that threw the error.
+     * Gets the name property value. The name of the parameter that caused the error.
      * @return string|null
     */
     public function getName(): ?string {
@@ -86,7 +86,7 @@ class ErrorParameter implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the value property value. A description of the error.
+     * Gets the value property value. The value of the parameter that caused the error.
      * @return string|null
     */
     public function getValue(): ?string {
@@ -112,7 +112,7 @@ class ErrorParameter implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the name property value. Name of the entity that threw the error.
+     * Sets the name property value. The name of the parameter that caused the error.
      * @param string|null $value Value to set for the name property.
     */
     public function setName(?string $value): void {
@@ -120,7 +120,7 @@ class ErrorParameter implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the value property value. A description of the error.
+     * Sets the value property value. The value of the parameter that caused the error.
      * @param string|null $value Value to set for the value property.
     */
     public function setValue(?string $value): void {

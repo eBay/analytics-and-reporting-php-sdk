@@ -37,14 +37,14 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
     private ?array $dimensionMetrics = null;
     
     /**
-     * @var EvaluationCycle|null $evaluationCycle This complex type describes the start and end dates of the of the time period over which the associated benchmark is computed.  <br><br>All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * @var EvaluationCycle|null $evaluationCycle This complex type defines the evaluation type (<code>CURRENT</code> or <code>PROJECTED</code>) and the transaction lookback period used to calculate the seller's customer service metric.
     */
     private ?EvaluationCycle $evaluationCycle = null;
     
     /**
-     * @var string|null $marketplaceId The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages">Service metrics policy</a> page. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/bas:MarketplaceIdEnum'>eBay API documentation</a>
+     * @var MarketplaceIdEnum|null $marketplaceId The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages" target="_blank">Service metrics policy</a> page.
     */
-    private ?string $marketplaceId = null;
+    private ?MarketplaceIdEnum $marketplaceId = null;
     
     /**
      * Instantiates a new GetCustomerServiceMetricResponse and sets the default values.
@@ -79,7 +79,7 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the evaluationCycle property value. This complex type describes the start and end dates of the of the time period over which the associated benchmark is computed.  <br><br>All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * Gets the evaluationCycle property value. This complex type defines the evaluation type (<code>CURRENT</code> or <code>PROJECTED</code>) and the transaction lookback period used to calculate the seller's customer service metric.
      * @return EvaluationCycle|null
     */
     public function getEvaluationCycle(): ?EvaluationCycle {
@@ -95,15 +95,15 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
         return  [
             'dimensionMetrics' => fn(ParseNode $n) => $o->setDimensionMetrics($n->getCollectionOfObjectValues([DimensionMetric::class, 'createFromDiscriminatorValue'])),
             'evaluationCycle' => fn(ParseNode $n) => $o->setEvaluationCycle($n->getObjectValue([EvaluationCycle::class, 'createFromDiscriminatorValue'])),
-            'marketplaceId' => fn(ParseNode $n) => $o->setMarketplaceId($n->getStringValue()),
+            'marketplaceId' => fn(ParseNode $n) => $o->setMarketplaceId($n->getEnumValue(MarketplaceIdEnum::class)),
         ];
     }
 
     /**
-     * Gets the marketplaceId property value. The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages">Service metrics policy</a> page. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/bas:MarketplaceIdEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the marketplaceId property value. The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages" target="_blank">Service metrics policy</a> page.
+     * @return MarketplaceIdEnum|null
     */
-    public function getMarketplaceId(): ?string {
+    public function getMarketplaceId(): ?MarketplaceIdEnum {
         return $this->marketplaceId;
     }
 
@@ -114,7 +114,7 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
     public function serialize(SerializationWriter $writer): void {
         $writer->writeCollectionOfObjectValues('dimensionMetrics', $this->getDimensionMetrics());
         $writer->writeObjectValue('evaluationCycle', $this->getEvaluationCycle());
-        $writer->writeStringValue('marketplaceId', $this->getMarketplaceId());
+        $writer->writeEnumValue('marketplaceId', $this->getMarketplaceId());
         $writer->writeAdditionalData($this->getAdditionalData());
     }
 
@@ -135,7 +135,7 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the evaluationCycle property value. This complex type describes the start and end dates of the of the time period over which the associated benchmark is computed.  <br><br>All timestamps are based on Mountain Standard Time (MST).  <br><br>The timestamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" title="https://www.iso.org" target="_blank">ISO 8601</a> string, which is based on the 24-hour Coordinated Universal Time (UTC) clock.
+     * Sets the evaluationCycle property value. This complex type defines the evaluation type (<code>CURRENT</code> or <code>PROJECTED</code>) and the transaction lookback period used to calculate the seller's customer service metric.
      * @param EvaluationCycle|null $value Value to set for the evaluationCycle property.
     */
     public function setEvaluationCycle(?EvaluationCycle $value): void {
@@ -143,10 +143,10 @@ class GetCustomerServiceMetricResponse implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the marketplaceId property value. The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages">Service metrics policy</a> page. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/bas:MarketplaceIdEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the marketplaceId property.
+     * Sets the marketplaceId property value. The eBay marketplace ID of the marketplace upon which the customer service metric evaluation is based.  <br><br>The <b>customer_service_metric</b> resource supports a limited set of marketplaces. For a complete list of the supported marketplaces, please see the <a href="https://www.ebay.com/help/policies/selling-policies/seller-performance-policy/service-metrics-policy?id=4769#section2" title="eBay Help pages" target="_blank">Service metrics policy</a> page.
+     * @param MarketplaceIdEnum|null $value Value to set for the marketplaceId property.
     */
-    public function setMarketplaceId(?string $value): void {
+    public function setMarketplaceId(?MarketplaceIdEnum $value): void {
         $this->marketplaceId = $value;
     }
 

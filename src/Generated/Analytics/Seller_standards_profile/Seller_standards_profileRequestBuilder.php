@@ -16,6 +16,8 @@
 
 namespace EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile;
 
+use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Error;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Models\ErrorMessageV3;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\FindSellerStandardsProfilesResponse;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Item\WithProgramItemRequestBuilder;
 use Exception;
@@ -32,7 +34,7 @@ class Seller_standards_profileRequestBuilder extends BaseRequestBuilder
 {
     /**
      * Gets an item from the EBay/AnalyticsAndReporting/Generated/Analytics.seller_standards_profile.item collection
-     * @param string $program This path parameter is used to specify the seller standards program for which metrics and metadata will be retrieved. <br><br>See <a href="/api-docs/sell/analytics/types/ssp:ProgramEnum" target="_blank">ProgramEnum</a> for a list of supported values.
+     * @param string $program This path parameter is used to specify the seller standards program for which metrics and metadata will be retrieved. <br><br>See <a href="/develop/api/sell/analytics_api#sell-analytics_api-seller_standards_profile-getsellerstandardsprofile.programenum">ProgramEnum</a> for a list of supported values.
      * @return WithProgramItemRequestBuilder
     */
     public function byProgram(string $program): WithProgramItemRequestBuilder {
@@ -56,18 +58,22 @@ class Seller_standards_profileRequestBuilder extends BaseRequestBuilder
     }
 
     /**
-     * This call retrieves all the standards profiles for the associated seller.  <br><br>A <i>standards profile </i> is a set of eBay seller metrics and the seller's associated compliance values (either <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>).  <br><br>A seller's multiple profiles are distinguished by two criteria, a "program" and a "cycle." A profile's <i>program </i> is one of three regions where the seller may have done business, or <code>PROGRAM_GLOBAL</code> to indicate all marketplaces where the seller has done business. The <i>cycle</i> value specifies whether the standards compliance values were determined at the last official eBay evaluation or at the time of the request.
+     * This call retrieves all the standards profiles for the associated seller.  <br><br>A <i>standards profile </i> is a set of eBay seller metrics and the seller's associated compliance values (either <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>).  <br><br>A seller's multiple profiles are distinguished by two criteria, a "program" and a "cycle." A profile's <i>program </i> is one of three regions where the seller may have done business, or <code>PROGRAM_GLOBAL</code> to indicate all marketplaces where the seller has done business. The <i>cycle</i> value specifies whether the standards compliance values were determined at the last official eBay evaluation or at the time of the request.<br><br>For more information on the interpreting the response payload of this method, see <a href="/api-docs/sell/static/performance/seller-standards.html" target="_blank">Seller standards profile</a>.
      * @param Seller_standards_profileRequestBuilderGetRequestConfiguration|null $requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
      * @return Promise<FindSellerStandardsProfilesResponse|null>
      * @throws Exception
     */
     public function get(?Seller_standards_profileRequestBuilderGetRequestConfiguration $requestConfiguration = null): Promise {
         $requestInfo = $this->toGetRequestInformation($requestConfiguration);
-        return $this->requestAdapter->sendAsync($requestInfo, [FindSellerStandardsProfilesResponse::class, 'createFromDiscriminatorValue'], null);
+        $errorMappings = [
+                '400' => [Error::class, 'createFromDiscriminatorValue'],
+                '500' => [ErrorMessageV3::class, 'createFromDiscriminatorValue'],
+        ];
+        return $this->requestAdapter->sendAsync($requestInfo, [FindSellerStandardsProfilesResponse::class, 'createFromDiscriminatorValue'], $errorMappings);
     }
 
     /**
-     * This call retrieves all the standards profiles for the associated seller.  <br><br>A <i>standards profile </i> is a set of eBay seller metrics and the seller's associated compliance values (either <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>).  <br><br>A seller's multiple profiles are distinguished by two criteria, a "program" and a "cycle." A profile's <i>program </i> is one of three regions where the seller may have done business, or <code>PROGRAM_GLOBAL</code> to indicate all marketplaces where the seller has done business. The <i>cycle</i> value specifies whether the standards compliance values were determined at the last official eBay evaluation or at the time of the request.
+     * This call retrieves all the standards profiles for the associated seller.  <br><br>A <i>standards profile </i> is a set of eBay seller metrics and the seller's associated compliance values (either <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>).  <br><br>A seller's multiple profiles are distinguished by two criteria, a "program" and a "cycle." A profile's <i>program </i> is one of three regions where the seller may have done business, or <code>PROGRAM_GLOBAL</code> to indicate all marketplaces where the seller has done business. The <i>cycle</i> value specifies whether the standards compliance values were determined at the last official eBay evaluation or at the time of the request.<br><br>For more information on the interpreting the response payload of this method, see <a href="/api-docs/sell/static/performance/seller-standards.html" target="_blank">Seller standards profile</a>.
      * @param Seller_standards_profileRequestBuilderGetRequestConfiguration|null $requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
      * @return RequestInformation
     */

@@ -37,7 +37,7 @@ class MetadataRecord implements AdditionalDataHolder, Parsable
     private ?array $metadataValues = null;
     
     /**
-     * @var Value|null $value A complex type that contains a value, plus the veracity of that value.
+     * @var Value|null $value The value of the key on which the report is based. <br><br>For example, if the key is the listing ID, the value of this container could be: <br><br><code>"value": {<br>&nbsp;&nbsp;"value": "142133954229",<br>&nbsp;&nbsp;"applicable": true<br>}</code>
     */
     private ?Value $value = null;
     
@@ -86,7 +86,7 @@ class MetadataRecord implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the value property value. A complex type that contains a value, plus the veracity of that value.
+     * Gets the value property value. The value of the key on which the report is based. <br><br>For example, if the key is the listing ID, the value of this container could be: <br><br><code>"value": {<br>&nbsp;&nbsp;"value": "142133954229",<br>&nbsp;&nbsp;"applicable": true<br>}</code>
      * @return Value|null
     */
     public function getValue(): ?Value {
@@ -120,7 +120,7 @@ class MetadataRecord implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the value property value. A complex type that contains a value, plus the veracity of that value.
+     * Sets the value property value. The value of the key on which the report is based. <br><br>For example, if the key is the listing ID, the value of this container could be: <br><br><code>"value": {<br>&nbsp;&nbsp;"value": "142133954229",<br>&nbsp;&nbsp;"applicable": true<br>}</code>
      * @param Value|null $value Value to set for the value property.
     */
     public function setValue(?Value $value): void {

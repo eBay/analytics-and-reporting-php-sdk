@@ -22,7 +22,7 @@ echo "Regenerating REST clients via Kiota..."
 rm -rf src/Generated
 
 kiota generate -l php \
-  -d specs/openapi/analytics.yaml \
+  -d specs/openapi/analytics.json \
   -c AnalyticsApiClient \
   -n 'EBay\AnalyticsAndReporting\Generated\Analytics' \
   -o src/Generated/Analytics \

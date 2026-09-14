@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * Type that defines the headers for the dimension keys and metrics returned in the report.
+ * This type defines the headers for the dimension keys and metrics returned in the report.
 */
 class Header implements AdditionalDataHolder, Parsable 
 {

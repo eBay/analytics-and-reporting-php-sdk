@@ -32,24 +32,24 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $adjustment If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingAdjustmentTypeEnum'>eBay API documentation</a>
+     * @var RatingAdjustmentTypeEnum|null $adjustment If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller.
     */
-    private ?string $adjustment = null;
+    private ?RatingAdjustmentTypeEnum $adjustment = null;
     
     /**
-     * @var string|null $basis This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:BenchmarkTypeEnum'>eBay API documentation</a>
+     * @var BenchmarkTypeEnum|null $basis This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>.
     */
-    private ?string $basis = null;
+    private ?BenchmarkTypeEnum $basis = null;
     
     /**
-     * @var BenchmarkMetadata|null $metadata This complex type defines the fields that comprise the benchmark against which the seller's performance is compared. The comparison determines the seller's rating for the metric.
+     * @var BenchmarkMetadata|null $metadata This field contains the benchmark data.
     */
     private ?BenchmarkMetadata $metadata = null;
     
     /**
-     * @var string|null $rating This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingTypeEnum'>eBay API documentation</a>
+     * @var RatingTypeEnum|null $rating This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating.
     */
-    private ?string $rating = null;
+    private ?RatingTypeEnum $rating = null;
     
     /**
      * Instantiates a new MetricBenchmark and sets the default values.
@@ -76,18 +76,18 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the adjustment property value. If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingAdjustmentTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the adjustment property value. If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller.
+     * @return RatingAdjustmentTypeEnum|null
     */
-    public function getAdjustment(): ?string {
+    public function getAdjustment(): ?RatingAdjustmentTypeEnum {
         return $this->adjustment;
     }
 
     /**
-     * Gets the basis property value. This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:BenchmarkTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the basis property value. This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>.
+     * @return BenchmarkTypeEnum|null
     */
-    public function getBasis(): ?string {
+    public function getBasis(): ?BenchmarkTypeEnum {
         return $this->basis;
     }
 
@@ -98,15 +98,15 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     public function getFieldDeserializers(): array {
         $o = $this;
         return  [
-            'adjustment' => fn(ParseNode $n) => $o->setAdjustment($n->getStringValue()),
-            'basis' => fn(ParseNode $n) => $o->setBasis($n->getStringValue()),
+            'adjustment' => fn(ParseNode $n) => $o->setAdjustment($n->getEnumValue(RatingAdjustmentTypeEnum::class)),
+            'basis' => fn(ParseNode $n) => $o->setBasis($n->getEnumValue(BenchmarkTypeEnum::class)),
             'metadata' => fn(ParseNode $n) => $o->setMetadata($n->getObjectValue([BenchmarkMetadata::class, 'createFromDiscriminatorValue'])),
-            'rating' => fn(ParseNode $n) => $o->setRating($n->getStringValue()),
+            'rating' => fn(ParseNode $n) => $o->setRating($n->getEnumValue(RatingTypeEnum::class)),
         ];
     }
 
     /**
-     * Gets the metadata property value. This complex type defines the fields that comprise the benchmark against which the seller's performance is compared. The comparison determines the seller's rating for the metric.
+     * Gets the metadata property value. This field contains the benchmark data.
      * @return BenchmarkMetadata|null
     */
     public function getMetadata(): ?BenchmarkMetadata {
@@ -114,10 +114,10 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the rating property value. This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the rating property value. This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating.
+     * @return RatingTypeEnum|null
     */
-    public function getRating(): ?string {
+    public function getRating(): ?RatingTypeEnum {
         return $this->rating;
     }
 
@@ -126,10 +126,10 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
      * @param SerializationWriter $writer Serialization writer to use to serialize this model
     */
     public function serialize(SerializationWriter $writer): void {
-        $writer->writeStringValue('adjustment', $this->getAdjustment());
-        $writer->writeStringValue('basis', $this->getBasis());
+        $writer->writeEnumValue('adjustment', $this->getAdjustment());
+        $writer->writeEnumValue('basis', $this->getBasis());
         $writer->writeObjectValue('metadata', $this->getMetadata());
-        $writer->writeStringValue('rating', $this->getRating());
+        $writer->writeEnumValue('rating', $this->getRating());
         $writer->writeAdditionalData($this->getAdditionalData());
     }
 
@@ -142,23 +142,23 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the adjustment property value. If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingAdjustmentTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the adjustment property.
+     * Sets the adjustment property value. If this field is present, it indicates that the rating given to the seller was "adjusted" for one reason or another.  <br><br>If eBay determines that the normal rating of a seller is impacted by circumstances beyond their control, they can issue an override to adjust the rating given to the seller.
+     * @param RatingAdjustmentTypeEnum|null $value Value to set for the adjustment property.
     */
-    public function setAdjustment(?string $value): void {
+    public function setAdjustment(?RatingAdjustmentTypeEnum $value): void {
         $this->adjustment = $value;
     }
 
     /**
-     * Sets the basis property value. This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:BenchmarkTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the basis property.
+     * Sets the basis property value. This field returns the "basis" by which the benchmark is calculated for the customer service metric type. <br><br>Currently, the only supported basis is <code>PEER_BENCHMARK</code>.
+     * @param BenchmarkTypeEnum|null $value Value to set for the basis property.
     */
-    public function setBasis(?string $value): void {
+    public function setBasis(?BenchmarkTypeEnum $value): void {
         $this->basis = $value;
     }
 
     /**
-     * Sets the metadata property value. This complex type defines the fields that comprise the benchmark against which the seller's performance is compared. The comparison determines the seller's rating for the metric.
+     * Sets the metadata property value. This field contains the benchmark data.
      * @param BenchmarkMetadata|null $value Value to set for the metadata property.
     */
     public function setMetadata(?BenchmarkMetadata $value): void {
@@ -166,10 +166,10 @@ class MetricBenchmark implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the rating property value. This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/api:RatingTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the rating property.
+     * Sets the rating property value. This field returns seller's rating for the customer service metric.  <br><br>The rating is set to a value that equals the relative deviation between the seller's metric value and the benchmark value for the customer service metric.  <br><br>Deviation values range from <code>LOW</code> to <code>VERY HIGH</code>, and the lower the deviation, the better the seller rating.
+     * @param RatingTypeEnum|null $value Value to set for the rating property.
     */
-    public function setRating(?string $value): void {
+    public function setRating(?RatingTypeEnum $value): void {
         $this->rating = $value;
     }
 

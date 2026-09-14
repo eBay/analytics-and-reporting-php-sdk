@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * Type that defines the metadata header fields.
+ * This type defines the metadata header fields.
 */
 class MetadataHeader implements AdditionalDataHolder, Parsable 
 {

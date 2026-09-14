@@ -32,12 +32,12 @@ class DimensionMetric implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var Dimension|null $dimension The fields in this complex type define the dimension, or attributes, by which the associated customer service metric and benchmark data is measured.  <br><br>The value of <b>dimensionKey</b> gets set according to the configuration of the input request. The <b>name</b> and <b>value</b> pair further define dimension under the key.
+     * @var Dimension|null $dimension This type defines the "dimension," or attributes, against which the associated customer service metric values and benchmark ratings are based.  <br><br>The <b>dimensionKey</b> value is set according to the <b>customer_service_metric_type</b> request parameter and the values in the associated <b>name</b>/<b>value</b> pairs relate to the <b>dimensionKey</b> that's being used to calculate the benchmark rating.
     */
     private ?Dimension $dimension = null;
     
     /**
-     * @var array<Metric>|null $metrics This is a list of <b>Metric</b> elements where each element contains data and information related to the transactions grouped by the associated <b>dimension</b>.
+     * @var array<ApiMetric>|null $metrics This is a list of <b>Metric</b> elements where each element contains data and information related to the transactions grouped by the associated <b>dimension</b>.
     */
     private ?array $metrics = null;
     
@@ -66,7 +66,7 @@ class DimensionMetric implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the dimension property value. The fields in this complex type define the dimension, or attributes, by which the associated customer service metric and benchmark data is measured.  <br><br>The value of <b>dimensionKey</b> gets set according to the configuration of the input request. The <b>name</b> and <b>value</b> pair further define dimension under the key.
+     * Gets the dimension property value. This type defines the "dimension," or attributes, against which the associated customer service metric values and benchmark ratings are based.  <br><br>The <b>dimensionKey</b> value is set according to the <b>customer_service_metric_type</b> request parameter and the values in the associated <b>name</b>/<b>value</b> pairs relate to the <b>dimensionKey</b> that's being used to calculate the benchmark rating.
      * @return Dimension|null
     */
     public function getDimension(): ?Dimension {
@@ -81,13 +81,13 @@ class DimensionMetric implements AdditionalDataHolder, Parsable
         $o = $this;
         return  [
             'dimension' => fn(ParseNode $n) => $o->setDimension($n->getObjectValue([Dimension::class, 'createFromDiscriminatorValue'])),
-            'metrics' => fn(ParseNode $n) => $o->setMetrics($n->getCollectionOfObjectValues([Metric::class, 'createFromDiscriminatorValue'])),
+            'metrics' => fn(ParseNode $n) => $o->setMetrics($n->getCollectionOfObjectValues([ApiMetric::class, 'createFromDiscriminatorValue'])),
         ];
     }
 
     /**
      * Gets the metrics property value. This is a list of <b>Metric</b> elements where each element contains data and information related to the transactions grouped by the associated <b>dimension</b>.
-     * @return array<Metric>|null
+     * @return array<ApiMetric>|null
     */
     public function getMetrics(): ?array {
         return $this->metrics;
@@ -112,7 +112,7 @@ class DimensionMetric implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the dimension property value. The fields in this complex type define the dimension, or attributes, by which the associated customer service metric and benchmark data is measured.  <br><br>The value of <b>dimensionKey</b> gets set according to the configuration of the input request. The <b>name</b> and <b>value</b> pair further define dimension under the key.
+     * Sets the dimension property value. This type defines the "dimension," or attributes, against which the associated customer service metric values and benchmark ratings are based.  <br><br>The <b>dimensionKey</b> value is set according to the <b>customer_service_metric_type</b> request parameter and the values in the associated <b>name</b>/<b>value</b> pairs relate to the <b>dimensionKey</b> that's being used to calculate the benchmark rating.
      * @param Dimension|null $value Value to set for the dimension property.
     */
     public function setDimension(?Dimension $value): void {
@@ -121,7 +121,7 @@ class DimensionMetric implements AdditionalDataHolder, Parsable
 
     /**
      * Sets the metrics property value. This is a list of <b>Metric</b> elements where each element contains data and information related to the transactions grouped by the associated <b>dimension</b>.
-     * @param array<Metric>|null $value Value to set for the metrics property.
+     * @param array<ApiMetric>|null $value Value to set for the metrics property.
     */
     public function setMetrics(?array $value): void {
         $this->metrics = $value;

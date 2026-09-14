@@ -42,7 +42,7 @@ class WithEvaluation_typeItemRequestBuilderGetRequestConfiguration extends BaseR
 
     /**
      * Instantiates a new WithEvaluation_typeItemRequestBuilderGetQueryParameters.
-     * @param string|null $evaluation_marketplace_id Use this query parameter to specify the Marketplace ID to evaluate for the customer service metrics and benchmark data.  <br><br>For the list of supported marketplaces, see <a href="/api-docs/sell/analytics/static/overview.html#requirements" title="Analytics API Overview" target="_blank">Analytics API requirements and restrictions</a>. For implementation help, refer to eBay API documentation at https://developer.ebay.com/api-docs/sell/analytics/types/bas:MarketplaceIdEnum
+     * @param string|null $evaluation_marketplace_id Use this query parameter to specify the Marketplace ID to evaluate for the customer service metrics and benchmark data.  <br><br>Customer service metrics are supported for the following eBay marketplaces, and the unique identifier (enum) of the marketplace must be used in this field:<ul><li><b>Australia</b> (<code>EBAY_AU</code>)</li><li><b>Canada</b> (<code>EBAY_CA</code>) </li><li><b>France</b> (<code>EBAY_FR</code>) </li><li><b>Germany</b> (<code>EBAY_DE</code>) </li><li><b>Great Britain</b> (<code>EBAY_GB</code>) </li><li><b>Italy</b> (<code>EBAY_IT</code>) </li><li><b>Spain</b> (<code>EBAY_ES</code>) </li><li><b>United States</b> (<code>EBAY_US</code>) </li></ul>
      * @return WithEvaluation_typeItemRequestBuilderGetQueryParameters
     */
     public static function createQueryParameters(?string $evaluation_marketplace_id = null): WithEvaluation_typeItemRequestBuilderGetQueryParameters {
