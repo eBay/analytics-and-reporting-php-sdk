@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * Type that defines the fields of the individual record of the report.
+ * This type defines the fields of the individual record of the report.
 */
 class Record implements AdditionalDataHolder, Parsable 
 {

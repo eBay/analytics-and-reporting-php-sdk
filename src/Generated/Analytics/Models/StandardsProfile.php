@@ -32,7 +32,7 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var Cycle|null $cycle A complex type that describes a program cycle.
+     * @var Cycle|null $cycle A complex type that specifies the profile's evaluation cycle (<code>CURRENT</code> or <code>PROJECTED</code>), the date the evaluation was calculated, and  the month to which the evaluation pertains.  <br><br>Each program has at least one cycle, but a program can include both cycle types.
     */
     private ?Cycle $cycle = null;
     
@@ -47,19 +47,19 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
     private ?string $evaluationReason = null;
     
     /**
-     * @var array<Metric>|null $metrics A list of the metrics upon which a seller's profile is evaluated.  <br><br>Each program's applicable metrics and requirements are listed at <a href="http://www.sps.ebay.com/sd/sdrequirements" target="_blank">eBay Top Rated seller program standards</a>.
+     * @var array<SspMetric>|null $metrics A list of the metrics upon which a seller's profile is evaluated.  <br><br>Each program's applicable metrics and requirements are listed at <a href="http://www.sps.ebay.com/sd/sdrequirements" target="_blank">eBay Top Rated seller program standards</a>.
     */
     private ?array $metrics = null;
     
     /**
-     * @var string|null $program Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:ProgramEnum'>eBay API documentation</a>
+     * @var ProgramEnum|null $program Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>.
     */
-    private ?string $program = null;
+    private ?ProgramEnum $program = null;
     
     /**
-     * @var string|null $standardsLevel The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:StandardsLevelEnum'>eBay API documentation</a>
+     * @var StandardsLevelEnum|null $standardsLevel The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>.
     */
-    private ?string $standardsLevel = null;
+    private ?StandardsLevelEnum $standardsLevel = null;
     
     /**
      * Instantiates a new StandardsProfile and sets the default values.
@@ -86,7 +86,7 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the cycle property value. A complex type that describes a program cycle.
+     * Gets the cycle property value. A complex type that specifies the profile's evaluation cycle (<code>CURRENT</code> or <code>PROJECTED</code>), the date the evaluation was calculated, and  the month to which the evaluation pertains.  <br><br>Each program has at least one cycle, but a program can include both cycle types.
      * @return Cycle|null
     */
     public function getCycle(): ?Cycle {
@@ -119,33 +119,33 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
             'cycle' => fn(ParseNode $n) => $o->setCycle($n->getObjectValue([Cycle::class, 'createFromDiscriminatorValue'])),
             'defaultProgram' => fn(ParseNode $n) => $o->setDefaultProgram($n->getBooleanValue()),
             'evaluationReason' => fn(ParseNode $n) => $o->setEvaluationReason($n->getStringValue()),
-            'metrics' => fn(ParseNode $n) => $o->setMetrics($n->getCollectionOfObjectValues([Metric::class, 'createFromDiscriminatorValue'])),
-            'program' => fn(ParseNode $n) => $o->setProgram($n->getStringValue()),
-            'standardsLevel' => fn(ParseNode $n) => $o->setStandardsLevel($n->getStringValue()),
+            'metrics' => fn(ParseNode $n) => $o->setMetrics($n->getCollectionOfObjectValues([SspMetric::class, 'createFromDiscriminatorValue'])),
+            'program' => fn(ParseNode $n) => $o->setProgram($n->getEnumValue(ProgramEnum::class)),
+            'standardsLevel' => fn(ParseNode $n) => $o->setStandardsLevel($n->getEnumValue(StandardsLevelEnum::class)),
         ];
     }
 
     /**
      * Gets the metrics property value. A list of the metrics upon which a seller's profile is evaluated.  <br><br>Each program's applicable metrics and requirements are listed at <a href="http://www.sps.ebay.com/sd/sdrequirements" target="_blank">eBay Top Rated seller program standards</a>.
-     * @return array<Metric>|null
+     * @return array<SspMetric>|null
     */
     public function getMetrics(): ?array {
         return $this->metrics;
     }
 
     /**
-     * Gets the program property value. Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:ProgramEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the program property value. Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>.
+     * @return ProgramEnum|null
     */
-    public function getProgram(): ?string {
+    public function getProgram(): ?ProgramEnum {
         return $this->program;
     }
 
     /**
-     * Gets the standardsLevel property value. The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:StandardsLevelEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the standardsLevel property value. The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>.
+     * @return StandardsLevelEnum|null
     */
-    public function getStandardsLevel(): ?string {
+    public function getStandardsLevel(): ?StandardsLevelEnum {
         return $this->standardsLevel;
     }
 
@@ -158,8 +158,8 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
         $writer->writeBooleanValue('defaultProgram', $this->getDefaultProgram());
         $writer->writeStringValue('evaluationReason', $this->getEvaluationReason());
         $writer->writeCollectionOfObjectValues('metrics', $this->getMetrics());
-        $writer->writeStringValue('program', $this->getProgram());
-        $writer->writeStringValue('standardsLevel', $this->getStandardsLevel());
+        $writer->writeEnumValue('program', $this->getProgram());
+        $writer->writeEnumValue('standardsLevel', $this->getStandardsLevel());
         $writer->writeAdditionalData($this->getAdditionalData());
     }
 
@@ -172,7 +172,7 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the cycle property value. A complex type that describes a program cycle.
+     * Sets the cycle property value. A complex type that specifies the profile's evaluation cycle (<code>CURRENT</code> or <code>PROJECTED</code>), the date the evaluation was calculated, and  the month to which the evaluation pertains.  <br><br>Each program has at least one cycle, but a program can include both cycle types.
      * @param Cycle|null $value Value to set for the cycle property.
     */
     public function setCycle(?Cycle $value): void {
@@ -197,25 +197,25 @@ class StandardsProfile implements AdditionalDataHolder, Parsable
 
     /**
      * Sets the metrics property value. A list of the metrics upon which a seller's profile is evaluated.  <br><br>Each program's applicable metrics and requirements are listed at <a href="http://www.sps.ebay.com/sd/sdrequirements" target="_blank">eBay Top Rated seller program standards</a>.
-     * @param array<Metric>|null $value Value to set for the metrics property.
+     * @param array<SspMetric>|null $value Value to set for the metrics property.
     */
     public function setMetrics(?array $value): void {
         $this->metrics = $value;
     }
 
     /**
-     * Sets the program property value. Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:ProgramEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the program property.
+     * Sets the program property value. Indicates the program used to generate the profile data. Values can be <code>PROGRAM_DE</code>, <code>PROGRAM_UK</code>, <code>PROGRAM_US</code>, or <code>PROGRAM_GLOBAL</code>.
+     * @param ProgramEnum|null $value Value to set for the program property.
     */
-    public function setProgram(?string $value): void {
+    public function setProgram(?ProgramEnum $value): void {
         $this->program = $value;
     }
 
     /**
-     * Sets the standardsLevel property value. The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:StandardsLevelEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the standardsLevel property.
+     * Sets the standardsLevel property value. The overall standards level of the seller, one of <code>TOP_RATED</code>, <code>ABOVE_STANDARD</code>, or <code>BELOW_STANDARD</code>.
+     * @param StandardsLevelEnum|null $value Value to set for the standardsLevel property.
     */
-    public function setStandardsLevel(?string $value): void {
+    public function setStandardsLevel(?StandardsLevelEnum $value): void {
         $this->standardsLevel = $value;
     }
 

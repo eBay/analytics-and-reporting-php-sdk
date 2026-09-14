@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * Type the defines the metadata information of the report. This includes the headers and the individual metadata records.
+ * This type defines the metadata information of the report. This includes the headers and the individual metadata records.
 */
 class Metadata implements AdditionalDataHolder, Parsable 
 {
@@ -32,7 +32,7 @@ class Metadata implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var MetadataHeader|null $metadataHeader Type that defines the metadata header fields.
+     * @var MetadataHeader|null $metadataHeader The container that returns the <b>dimensionKeys</b> and <b>metrics</b> headers for the report.
     */
     private ?MetadataHeader $metadataHeader = null;
     
@@ -78,7 +78,7 @@ class Metadata implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the metadataHeader property value. Type that defines the metadata header fields.
+     * Gets the metadataHeader property value. The container that returns the <b>dimensionKeys</b> and <b>metrics</b> headers for the report.
      * @return MetadataHeader|null
     */
     public function getMetadataHeader(): ?MetadataHeader {
@@ -112,7 +112,7 @@ class Metadata implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the metadataHeader property value. Type that defines the metadata header fields.
+     * Sets the metadataHeader property value. The container that returns the <b>dimensionKeys</b> and <b>metrics</b> headers for the report.
      * @param MetadataHeader|null $value Value to set for the metadataHeader property.
     */
     public function setMetadataHeader(?MetadataHeader $value): void {

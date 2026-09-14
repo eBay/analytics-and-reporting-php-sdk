@@ -16,6 +16,7 @@
 
 namespace EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report;
 
+use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Error;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Report;
 use Exception;
 use Http\Promise\Promise;
@@ -35,7 +36,7 @@ class Traffic_reportRequestBuilder extends BaseRequestBuilder
      * @param RequestAdapter $requestAdapter The request adapter to use to execute the requests.
     */
     public function __construct($pathParametersOrRawUrl, RequestAdapter $requestAdapter) {
-        parent::__construct($requestAdapter, [], '{+baseurl}/traffic_report{?dimension*,filter*,metric*,sort*}');
+        parent::__construct($requestAdapter, [], '{+baseurl}/traffic_report?dimension={dimension}&filter={filter}&metric={metric}{&sort*}');
         if (is_array($pathParametersOrRawUrl)) {
             $this->pathParameters = $pathParametersOrRawUrl;
         } else {
@@ -51,7 +52,11 @@ class Traffic_reportRequestBuilder extends BaseRequestBuilder
     */
     public function get(?Traffic_reportRequestBuilderGetRequestConfiguration $requestConfiguration = null): Promise {
         $requestInfo = $this->toGetRequestInformation($requestConfiguration);
-        return $this->requestAdapter->sendAsync($requestInfo, [Report::class, 'createFromDiscriminatorValue'], null);
+        $errorMappings = [
+                '400' => [Error::class, 'createFromDiscriminatorValue'],
+                '500' => [Error::class, 'createFromDiscriminatorValue'],
+        ];
+        return $this->requestAdapter->sendAsync($requestInfo, [Report::class, 'createFromDiscriminatorValue'], $errorMappings);
     }
 
     /**

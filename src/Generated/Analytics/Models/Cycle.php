@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * A complex type that describes a program cycle.
+ * A complex type that specifies the profile's evaluation cycle (<code>CURRENT</code> or <code>PROJECTED</code>), the date the evaluation was calculated, and  the month to which the evaluation pertains.  <br><br>Each program has at least one cycle, but a program can include both cycle types.
 */
 class Cycle implements AdditionalDataHolder, Parsable 
 {
@@ -32,9 +32,9 @@ class Cycle implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $cycleType The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:CycleTypeEnum'>eBay API documentation</a>
+     * @var CycleTypeEnum|null $cycleType The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested.
     */
-    private ?string $cycleType = null;
+    private ?CycleTypeEnum $cycleType = null;
     
     /**
      * @var string|null $evaluationDate The date and time at which the standard compliance values were determined for the profile.  <br><br>The time stamp is formatted as an <a href="https://www.iso.org/iso-8601-date-and-time-format.html" target="_blank">ISO 8601</a> string, which is based on the 24-hour Universal Coordinated Time (UTC) clock. <br><br><b>Format:</b> <code>[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].[sss]Z</code> <br><b>Example:</b> <code>2018-08-04T07:09:00.000Z</code>
@@ -71,10 +71,10 @@ class Cycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the cycleType property value. The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:CycleTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the cycleType property value. The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested.
+     * @return CycleTypeEnum|null
     */
-    public function getCycleType(): ?string {
+    public function getCycleType(): ?CycleTypeEnum {
         return $this->cycleType;
     }
 
@@ -101,7 +101,7 @@ class Cycle implements AdditionalDataHolder, Parsable
     public function getFieldDeserializers(): array {
         $o = $this;
         return  [
-            'cycleType' => fn(ParseNode $n) => $o->setCycleType($n->getStringValue()),
+            'cycleType' => fn(ParseNode $n) => $o->setCycleType($n->getEnumValue(CycleTypeEnum::class)),
             'evaluationDate' => fn(ParseNode $n) => $o->setEvaluationDate($n->getStringValue()),
             'evaluationMonth' => fn(ParseNode $n) => $o->setEvaluationMonth($n->getStringValue()),
         ];
@@ -112,7 +112,7 @@ class Cycle implements AdditionalDataHolder, Parsable
      * @param SerializationWriter $writer Serialization writer to use to serialize this model
     */
     public function serialize(SerializationWriter $writer): void {
-        $writer->writeStringValue('cycleType', $this->getCycleType());
+        $writer->writeEnumValue('cycleType', $this->getCycleType());
         $writer->writeStringValue('evaluationDate', $this->getEvaluationDate());
         $writer->writeStringValue('evaluationMonth', $this->getEvaluationMonth());
         $writer->writeAdditionalData($this->getAdditionalData());
@@ -127,10 +127,10 @@ class Cycle implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the cycleType property value. The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:CycleTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the cycleType property.
+     * Sets the cycleType property value. The cycle type, either <code>CURRENT</code> or <code>PROJECTED</code>. <br><br><code>CURRENT</code> means the profile's metrics values are from the most recent official eBay  monthly standards evaluation. <code>PROJECTED</code> means the profile values were determined when the profile was requested.
+     * @param CycleTypeEnum|null $value Value to set for the cycleType property.
     */
-    public function setCycleType(?string $value): void {
+    public function setCycleType(?CycleTypeEnum $value): void {
         $this->cycleType = $value;
     }
 

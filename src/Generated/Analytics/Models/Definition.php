@@ -32,9 +32,9 @@ class Definition implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $dataType Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:DataTypeEnum'>eBay API documentation</a>
+     * @var SrlDataTypeEnum|null $dataType Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>.
     */
-    private ?string $dataType = null;
+    private ?SrlDataTypeEnum $dataType = null;
     
     /**
      * @var string|null $key The value the <b>dimension</b> or <b>metric</b> parameter as submitted in the request.
@@ -71,10 +71,10 @@ class Definition implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the dataType property value. Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:DataTypeEnum'>eBay API documentation</a>
-     * @return string|null
+     * Gets the dataType property value. Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>.
+     * @return SrlDataTypeEnum|null
     */
-    public function getDataType(): ?string {
+    public function getDataType(): ?SrlDataTypeEnum {
         return $this->dataType;
     }
 
@@ -85,7 +85,7 @@ class Definition implements AdditionalDataHolder, Parsable
     public function getFieldDeserializers(): array {
         $o = $this;
         return  [
-            'dataType' => fn(ParseNode $n) => $o->setDataType($n->getStringValue()),
+            'dataType' => fn(ParseNode $n) => $o->setDataType($n->getEnumValue(SrlDataTypeEnum::class)),
             'key' => fn(ParseNode $n) => $o->setKey($n->getStringValue()),
             'localizedName' => fn(ParseNode $n) => $o->setLocalizedName($n->getStringValue()),
         ];
@@ -112,7 +112,7 @@ class Definition implements AdditionalDataHolder, Parsable
      * @param SerializationWriter $writer Serialization writer to use to serialize this model
     */
     public function serialize(SerializationWriter $writer): void {
-        $writer->writeStringValue('dataType', $this->getDataType());
+        $writer->writeEnumValue('dataType', $this->getDataType());
         $writer->writeStringValue('key', $this->getKey());
         $writer->writeStringValue('localizedName', $this->getLocalizedName());
         $writer->writeAdditionalData($this->getAdditionalData());
@@ -127,10 +127,10 @@ class Definition implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the dataType property value. Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>. For implementation help, refer to <a href='https://developer.ebay.com/api-docs/sell/analytics/types/ssp:DataTypeEnum'>eBay API documentation</a>
-     * @param string|null $value Value to set for the dataType property.
+     * Sets the dataType property value. Indicates the data type of the returned dimension. For example, if the <b>dimension</b> is <code>day</code>, the data type is <code>DATE</code>.
+     * @param SrlDataTypeEnum|null $value Value to set for the dataType property.
     */
-    public function setDataType(?string $value): void {
+    public function setDataType(?SrlDataTypeEnum $value): void {
         $this->dataType = $value;
     }
 

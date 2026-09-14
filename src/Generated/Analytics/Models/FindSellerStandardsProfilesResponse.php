@@ -22,7 +22,7 @@ use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
 use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 
 /**
- * The response container for a list of seller profiles.
+ * This type returns a list of seller profiles.
 */
 class FindSellerStandardsProfilesResponse implements AdditionalDataHolder, Parsable 
 {

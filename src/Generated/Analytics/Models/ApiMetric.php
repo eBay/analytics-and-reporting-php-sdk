@@ -24,7 +24,7 @@ use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 /**
  * This complex data type defines the details of the customer service metric and benchmark data related to the associated <b>dimension</b>.
 */
-class Metric implements AdditionalDataHolder, Parsable 
+class ApiMetric implements AdditionalDataHolder, Parsable 
 {
     /**
      * @var array<string, mixed>|null $additionalData Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
@@ -32,7 +32,7 @@ class Metric implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var MetricBenchmark|null $benchmark This complex type defines the benchmark data, which includes the <b>average</b> value of the metric for the group (the benchmark) and the seller's overall <b>rating</b> when compared to the benchmark.
+     * @var MetricBenchmark|null $benchmark This complex type defines a set of benchmark data, which includes the <b>average</b> rating for the group included in the benchmark evaluation and the seller's calculated customer service metric rating for the benchmark.  <br><br>This container is returned only if the associated <b>metricKey</b> value is <code>RATE</code>.
     */
     private ?MetricBenchmark $benchmark = null;
     
@@ -52,7 +52,7 @@ class Metric implements AdditionalDataHolder, Parsable
     private ?string $value = null;
     
     /**
-     * Instantiates a new Metric and sets the default values.
+     * Instantiates a new ApiMetric and sets the default values.
     */
     public function __construct() {
         $this->setAdditionalData([]);
@@ -61,10 +61,10 @@ class Metric implements AdditionalDataHolder, Parsable
     /**
      * Creates a new instance of the appropriate class based on discriminator value
      * @param ParseNode $parseNode The parse node to use to read the discriminator value and create the object
-     * @return Metric
+     * @return ApiMetric
     */
-    public static function createFromDiscriminatorValue(ParseNode $parseNode): Metric {
-        return new Metric();
+    public static function createFromDiscriminatorValue(ParseNode $parseNode): ApiMetric {
+        return new ApiMetric();
     }
 
     /**
@@ -76,7 +76,7 @@ class Metric implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the benchmark property value. This complex type defines the benchmark data, which includes the <b>average</b> value of the metric for the group (the benchmark) and the seller's overall <b>rating</b> when compared to the benchmark.
+     * Gets the benchmark property value. This complex type defines a set of benchmark data, which includes the <b>average</b> rating for the group included in the benchmark evaluation and the seller's calculated customer service metric rating for the benchmark.  <br><br>This container is returned only if the associated <b>metricKey</b> value is <code>RATE</code>.
      * @return MetricBenchmark|null
     */
     public function getBenchmark(): ?MetricBenchmark {
@@ -142,7 +142,7 @@ class Metric implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the benchmark property value. This complex type defines the benchmark data, which includes the <b>average</b> value of the metric for the group (the benchmark) and the seller's overall <b>rating</b> when compared to the benchmark.
+     * Sets the benchmark property value. This complex type defines a set of benchmark data, which includes the <b>average</b> rating for the group included in the benchmark evaluation and the seller's calculated customer service metric rating for the benchmark.  <br><br>This container is returned only if the associated <b>metricKey</b> value is <code>RATE</code>.
      * @param MetricBenchmark|null $value Value to set for the benchmark property.
     */
     public function setBenchmark(?MetricBenchmark $value): void {

@@ -16,6 +16,7 @@
 
 namespace EBay\AnalyticsAndReporting\Generated\Analytics\Models;
 
+use Microsoft\Kiota\Abstractions\ApiException;
 use Microsoft\Kiota\Abstractions\Serialization\AdditionalDataHolder;
 use Microsoft\Kiota\Abstractions\Serialization\Parsable;
 use Microsoft\Kiota\Abstractions\Serialization\ParseNode;
@@ -23,9 +24,9 @@ use Microsoft\Kiota\Abstractions\Serialization\SerializationWriter;
 use Microsoft\Kiota\Abstractions\Types\TypeUtils;
 
 /**
- * Type that defines the fields that can be returned in an error.
+ * This type defines the fields that can be returned in an error.
 */
-class Error implements AdditionalDataHolder, Parsable 
+class Error extends ApiException implements AdditionalDataHolder, Parsable 
 {
     /**
      * @var array<string, mixed>|null $additionalData Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
@@ -33,47 +34,47 @@ class Error implements AdditionalDataHolder, Parsable
     private ?array $additionalData = null;
     
     /**
-     * @var string|null $category Identifies whether the error was in the REQUEST or happened when running the APPLICATION.
+     * @var string|null $category Identifies the type of error.
     */
     private ?string $category = null;
     
     /**
-     * @var string|null $domain The primary system where the error occurred. This is relevant for application errors. For Analytics errors, it always has the value <code>API_ANALYTICS</code>.
+     * @var string|null $domain Name for the primary system where the error occurred. This is relevant for application errors.
     */
     private ?string $domain = null;
     
     /**
-     * @var int|null $errorId A positive integer that uniquely identifies the specific error condition that occurred. Your application can use error codes as identifiers in your customized error-handling algorithms. Traffic report error IDs range from 50001 to 50500.
+     * @var int|null $errorId A unique number to identify the error.
     */
     private ?int $errorId = null;
     
     /**
-     * @var array<string>|null $inputRefIds Identifies specific request elements associated with the error, if any. inputRefId's response is format specific. For JSON, use <i>JSONPath</i> notation.
+     * @var string|null $escapedMessage Information on how to correct the problem, in the end user's terms and language where applicable.
+    */
+    private ?string $escapedMessage = null;
+    
+    /**
+     * @var array<string>|null $inputRefIds An array of request elements most closely associated to the error.
     */
     private ?array $inputRefIds = null;
     
     /**
-     * @var string|null $longMessage A more detailed explanation of the error than given in the <code>message</code> error field.
+     * @var string|null $longMessage A more detailed explanation of the error.
     */
     private ?string $longMessage = null;
     
     /**
-     * @var string|null $message Information on how to correct the problem, in the end user's terms and language where applicable. Its value is at most 50 characters long. If applicable, the value is localized in the end user's requested locale.
-    */
-    private ?string $message = null;
-    
-    /**
-     * @var array<string>|null $outputRefIds Identifies specific response elements associated with the error, if any. Path format is the same as <code>inputRefId</code>.
+     * @var array<string>|null $outputRefIds An array of request elements most closely associated to the error.
     */
     private ?array $outputRefIds = null;
     
     /**
-     * @var array<ErrorParameter>|null $parameters This optional list of name/value pairs that contain context-specific <code>ErrorParameter</code> objects, with each item in the list being a parameter (or input field name) that caused an error condition. Each <code>ErrorParameter</code> object consists of two fields, a <code>name</code> and a <code>value</code>.
+     * @var array<ErrorParameter>|null $parameters An array of name/value pairs that describe details the error condition. These are useful when multiple errors are returned.
     */
     private ?array $parameters = null;
     
     /**
-     * @var string|null $subdomain If present, indicates which subsystem in which the error occurred.
+     * @var string|null $subdomain Further helps indicate which subsystem the error is coming from. System subcategories include: Initialization, Serialization, Security, Monitoring, Rate Limiting, etc.
     */
     private ?string $subdomain = null;
     
@@ -94,6 +95,14 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
+     * Gets the message property value. Information on how to correct the problem, in the end user's terms and language where applicable.
+     * @return string|null
+    */
+    public function escapedGetMessage(): ?string {
+        return $this->escapedMessage;
+    }
+
+    /**
      * Gets the AdditionalData property value. Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
      * @return array<string, mixed>|null
     */
@@ -102,7 +111,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the category property value. Identifies whether the error was in the REQUEST or happened when running the APPLICATION.
+     * Gets the category property value. Identifies the type of error.
      * @return string|null
     */
     public function getCategory(): ?string {
@@ -110,7 +119,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the domain property value. The primary system where the error occurred. This is relevant for application errors. For Analytics errors, it always has the value <code>API_ANALYTICS</code>.
+     * Gets the domain property value. Name for the primary system where the error occurred. This is relevant for application errors.
      * @return string|null
     */
     public function getDomain(): ?string {
@@ -118,7 +127,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the errorId property value. A positive integer that uniquely identifies the specific error condition that occurred. Your application can use error codes as identifiers in your customized error-handling algorithms. Traffic report error IDs range from 50001 to 50500.
+     * Gets the errorId property value. A unique number to identify the error.
      * @return int|null
     */
     public function getErrorId(): ?int {
@@ -135,6 +144,7 @@ class Error implements AdditionalDataHolder, Parsable
             'category' => fn(ParseNode $n) => $o->setCategory($n->getStringValue()),
             'domain' => fn(ParseNode $n) => $o->setDomain($n->getStringValue()),
             'errorId' => fn(ParseNode $n) => $o->setErrorId($n->getIntegerValue()),
+            'message' => fn(ParseNode $n) => $o->setMessage($n->getStringValue()),
             'inputRefIds' => function (ParseNode $n) {
                 $val = $n->getCollectionOfPrimitiveValues();
                 if (is_array($val)) {
@@ -144,7 +154,6 @@ class Error implements AdditionalDataHolder, Parsable
                 $this->setInputRefIds($val);
             },
             'longMessage' => fn(ParseNode $n) => $o->setLongMessage($n->getStringValue()),
-            'message' => fn(ParseNode $n) => $o->setMessage($n->getStringValue()),
             'outputRefIds' => function (ParseNode $n) {
                 $val = $n->getCollectionOfPrimitiveValues();
                 if (is_array($val)) {
@@ -159,7 +168,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the inputRefIds property value. Identifies specific request elements associated with the error, if any. inputRefId's response is format specific. For JSON, use <i>JSONPath</i> notation.
+     * Gets the inputRefIds property value. An array of request elements most closely associated to the error.
      * @return array<string>|null
     */
     public function getInputRefIds(): ?array {
@@ -167,7 +176,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the longMessage property value. A more detailed explanation of the error than given in the <code>message</code> error field.
+     * Gets the longMessage property value. A more detailed explanation of the error.
      * @return string|null
     */
     public function getLongMessage(): ?string {
@@ -175,15 +184,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the message property value. Information on how to correct the problem, in the end user's terms and language where applicable. Its value is at most 50 characters long. If applicable, the value is localized in the end user's requested locale.
-     * @return string|null
-    */
-    public function getMessage(): ?string {
-        return $this->message;
-    }
-
-    /**
-     * Gets the outputRefIds property value. Identifies specific response elements associated with the error, if any. Path format is the same as <code>inputRefId</code>.
+     * Gets the outputRefIds property value. An array of request elements most closely associated to the error.
      * @return array<string>|null
     */
     public function getOutputRefIds(): ?array {
@@ -191,7 +192,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the parameters property value. This optional list of name/value pairs that contain context-specific <code>ErrorParameter</code> objects, with each item in the list being a parameter (or input field name) that caused an error condition. Each <code>ErrorParameter</code> object consists of two fields, a <code>name</code> and a <code>value</code>.
+     * Gets the parameters property value. An array of name/value pairs that describe details the error condition. These are useful when multiple errors are returned.
      * @return array<ErrorParameter>|null
     */
     public function getParameters(): ?array {
@@ -199,7 +200,15 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Gets the subdomain property value. If present, indicates which subsystem in which the error occurred.
+     * The primary error message.
+     * @return string
+    */
+    public function getPrimaryErrorMessage(): string {
+        return parent::getMessage();
+    }
+
+    /**
+     * Gets the subdomain property value. Further helps indicate which subsystem the error is coming from. System subcategories include: Initialization, Serialization, Security, Monitoring, Rate Limiting, etc.
      * @return string|null
     */
     public function getSubdomain(): ?string {
@@ -214,9 +223,9 @@ class Error implements AdditionalDataHolder, Parsable
         $writer->writeStringValue('category', $this->getCategory());
         $writer->writeStringValue('domain', $this->getDomain());
         $writer->writeIntegerValue('errorId', $this->getErrorId());
+        $writer->writeStringValue('message', $this->escapedGetMessage());
         $writer->writeCollectionOfPrimitiveValues('inputRefIds', $this->getInputRefIds());
         $writer->writeStringValue('longMessage', $this->getLongMessage());
-        $writer->writeStringValue('message', $this->getMessage());
         $writer->writeCollectionOfPrimitiveValues('outputRefIds', $this->getOutputRefIds());
         $writer->writeCollectionOfObjectValues('parameters', $this->getParameters());
         $writer->writeStringValue('subdomain', $this->getSubdomain());
@@ -232,7 +241,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the category property value. Identifies whether the error was in the REQUEST or happened when running the APPLICATION.
+     * Sets the category property value. Identifies the type of error.
      * @param string|null $value Value to set for the category property.
     */
     public function setCategory(?string $value): void {
@@ -240,7 +249,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the domain property value. The primary system where the error occurred. This is relevant for application errors. For Analytics errors, it always has the value <code>API_ANALYTICS</code>.
+     * Sets the domain property value. Name for the primary system where the error occurred. This is relevant for application errors.
      * @param string|null $value Value to set for the domain property.
     */
     public function setDomain(?string $value): void {
@@ -248,7 +257,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the errorId property value. A positive integer that uniquely identifies the specific error condition that occurred. Your application can use error codes as identifiers in your customized error-handling algorithms. Traffic report error IDs range from 50001 to 50500.
+     * Sets the errorId property value. A unique number to identify the error.
      * @param int|null $value Value to set for the errorId property.
     */
     public function setErrorId(?int $value): void {
@@ -256,7 +265,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the inputRefIds property value. Identifies specific request elements associated with the error, if any. inputRefId's response is format specific. For JSON, use <i>JSONPath</i> notation.
+     * Sets the inputRefIds property value. An array of request elements most closely associated to the error.
      * @param array<string>|null $value Value to set for the inputRefIds property.
     */
     public function setInputRefIds(?array $value): void {
@@ -264,7 +273,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the longMessage property value. A more detailed explanation of the error than given in the <code>message</code> error field.
+     * Sets the longMessage property value. A more detailed explanation of the error.
      * @param string|null $value Value to set for the longMessage property.
     */
     public function setLongMessage(?string $value): void {
@@ -272,15 +281,15 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the message property value. Information on how to correct the problem, in the end user's terms and language where applicable. Its value is at most 50 characters long. If applicable, the value is localized in the end user's requested locale.
+     * Sets the message property value. Information on how to correct the problem, in the end user's terms and language where applicable.
      * @param string|null $value Value to set for the message property.
     */
     public function setMessage(?string $value): void {
-        $this->message = $value;
+        $this->escapedMessage = $value;
     }
 
     /**
-     * Sets the outputRefIds property value. Identifies specific response elements associated with the error, if any. Path format is the same as <code>inputRefId</code>.
+     * Sets the outputRefIds property value. An array of request elements most closely associated to the error.
      * @param array<string>|null $value Value to set for the outputRefIds property.
     */
     public function setOutputRefIds(?array $value): void {
@@ -288,7 +297,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the parameters property value. This optional list of name/value pairs that contain context-specific <code>ErrorParameter</code> objects, with each item in the list being a parameter (or input field name) that caused an error condition. Each <code>ErrorParameter</code> object consists of two fields, a <code>name</code> and a <code>value</code>.
+     * Sets the parameters property value. An array of name/value pairs that describe details the error condition. These are useful when multiple errors are returned.
      * @param array<ErrorParameter>|null $value Value to set for the parameters property.
     */
     public function setParameters(?array $value): void {
@@ -296,7 +305,7 @@ class Error implements AdditionalDataHolder, Parsable
     }
 
     /**
-     * Sets the subdomain property value. If present, indicates which subsystem in which the error occurred.
+     * Sets the subdomain property value. Further helps indicate which subsystem the error is coming from. System subcategories include: Initialization, Serialization, Security, Monitoring, Rate Limiting, etc.
      * @param string|null $value Value to set for the subdomain property.
     */
     public function setSubdomain(?string $value): void {
