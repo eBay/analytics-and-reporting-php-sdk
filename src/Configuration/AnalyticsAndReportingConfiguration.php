@@ -23,9 +23,9 @@ final class AnalyticsAndReportingConfiguration
     public readonly RequestOptions $defaultRequestOptions;
 
     public function __construct(
-        public readonly string  $analyticsBaseUrl  = 'https://api.ebay.com/sell/analytics/v1',
-        public readonly ?string $accessToken       = null,
-        public readonly bool    $diagnosticLogging = false,
+        public readonly string $analyticsBaseUrl = 'https://api.ebay.com/sell/analytics/v1',
+        public readonly ?string $accessToken = null,
+        public readonly bool $diagnosticLogging = false,
     ) {
         $this->defaultRequestOptions = new RequestOptions();
     }
@@ -38,7 +38,7 @@ final class AnalyticsAndReportingConfiguration
     }
 
     /**
-     * Hostnames tokens may be sent to — passed to AllowedHostsValidator.
+     * Hostnames tokens may be sent to. Passed to AllowedHostsValidator.
      *
      * @return string[]
      */
@@ -46,7 +46,9 @@ final class AnalyticsAndReportingConfiguration
     {
         return array_values(array_unique(array_filter(array_map(
             fn(string $url) => parse_url($url, PHP_URL_HOST),
-            [$this->analyticsBaseUrl]
+            [
+                $this->analyticsBaseUrl,
+            ]
         ), 'is_string')));
     }
 }

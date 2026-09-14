@@ -19,12 +19,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Regenerating REST clients via Kiota..."
+rm -rf src/Generated
 
 kiota generate -l php \
-  -d "$SCRIPT_DIR/specs/openapi/analytics.yaml" \
+  -d specs/openapi/analytics.yaml \
   -c AnalyticsApiClient \
   -n 'EBay\AnalyticsAndReporting\Generated\Analytics' \
-  -o "$SCRIPT_DIR/src/Generated/Analytics" \
+  -o src/Generated/Analytics \
   --ebc --co
 
 echo "Adding license headers to generated files..."
