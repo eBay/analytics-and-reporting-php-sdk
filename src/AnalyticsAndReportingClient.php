@@ -22,39 +22,56 @@ use EBay\AnalyticsAndReporting\Clients\Rest\AnalyticsClient;
 use EBay\AnalyticsAndReporting\Configuration\AnalyticsAndReportingConfiguration;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Main entry point for the eBay Analytics and Reporting PHP SDK.
+ */
 final class AnalyticsAndReportingClient
 {
     public readonly AnalyticsClient $analytics;
 
-    public function __construct(AnalyticsAndReportingConfiguration $config, ?GuzzleClient $guzzle = null)
-    {
-        $guzzle ??= self::buildGuzzle($config);
+    public function __construct(
+        AnalyticsAndReportingConfiguration $config,
+        ?GuzzleClient $guzzle = null,
+    ) {
+        $guzzle ??= $this->buildGuzzle($config);
 
         $this->analytics = new AnalyticsClient($guzzle, $config);
     }
 
-    private static function buildGuzzle(AnalyticsAndReportingConfiguration $config): GuzzleClient
+    /**
+     * Build a Guzzle client with optional diagnostic logging middleware.
+     * When $config->diagnosticLogging is true, all non-2xx responses are
+     * logged to STDERR with method, URI, status code, and response body.
+     */
+    private function buildGuzzle(AnalyticsAndReportingConfiguration $config): GuzzleClient
     {
         $stack = HandlerStack::create();
 
         if ($config->diagnosticLogging) {
-            $stack->push(function (callable $handler) {
-                return function ($request, array $options) use ($handler) {
-                    return $handler($request, $options)->then(function ($response) use ($request) {
-                        if ($response->getStatusCode() >= 400) {
-                            fwrite(STDERR, sprintf(
-                                "[REST %d] %s %s\n",
-                                $response->getStatusCode(),
-                                $request->getMethod(),
-                                str_replace(["\r", "\n"], ' ', (string) $request->getUri()),
-                            ));
-                            $body = (string) $response->getBody();
-                            fwrite(STDERR, "[REST body] $body\n");
-                            $response->getBody()->rewind();
+            $stack->push(static function (callable $handler): callable {
+                return static function (RequestInterface $request, array $options) use ($handler): mixed {
+                    return $handler($request, $options)->then(
+                        static function (ResponseInterface $response) use ($request): ResponseInterface {
+                            $status = $response->getStatusCode();
+                            if ($status < 200 || $status >= 300) {
+                                $body = (string) $response->getBody();
+                                fwrite(
+                                    STDERR,
+                                    sprintf(
+                                        "[AnalyticsAndReportingSDK] %s %s -> HTTP %d\n%s\n",
+                                        $request->getMethod(),
+                                        str_replace(["\r", "\n"], ' ', (string) $request->getUri()),
+                                        $status,
+                                        $body
+                                    )
+                                );
+                            }
+                            return $response;
                         }
-                        return $response;
-                    });
+                    );
                 };
             });
         }

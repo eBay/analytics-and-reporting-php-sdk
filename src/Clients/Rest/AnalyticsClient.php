@@ -18,20 +18,18 @@ declare(strict_types=1);
 
 namespace EBay\AnalyticsAndReporting\Clients\Rest;
 
-use EBay\AnalyticsAndReporting\Configuration\AnalyticsAndReportingConfiguration;
 use EBay\AnalyticsAndReporting\Configuration\KiotaAuthProvider;
+use EBay\AnalyticsAndReporting\Configuration\AnalyticsAndReportingConfiguration;
 use EBay\AnalyticsAndReporting\Configuration\RequestOptions;
 use EBay\AnalyticsAndReporting\Generated\Analytics\AnalyticsApiClient;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetQueryParameters;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Seller_standards_profileRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Item\Item\WithCycleItemRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetQueryParameters;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\FindSellerStandardsProfilesResponse;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\GetCustomerServiceMetricResponse;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Models\StandardsProfile;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Report;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Models\StandardsProfile;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Item\Item\WithCycleItemRequestBuilderGetRequestConfiguration;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Seller_standards_profileRequestBuilderGetRequestConfiguration;
+use EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetRequestConfiguration;
 use GuzzleHttp\Client as GuzzleClient;
 use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
 use Microsoft\Kiota\Http\GuzzleRequestAdapter;
@@ -43,94 +41,61 @@ final class AnalyticsClient
         private readonly AnalyticsAndReportingConfiguration $config,
     ) {}
 
-    /**
-     * Retrieves all standards profiles for the seller.
-     *
-     * @param string|null $accessToken Per-call token; overrides config fallback.
-     * @param RequestOptions|null $requestOptions Per-call headers.
-     * @return FindSellerStandardsProfilesResponse|null
-     */
-    public function findSellerStandardsProfiles(
-        ?string $accessToken = null,
-        ?RequestOptions $requestOptions = null,
-    ): ?FindSellerStandardsProfilesResponse {
-        $headers = $this->mergedHeaders($requestOptions);
-        $config = $headers !== [] ? new Seller_standards_profileRequestBuilderGetRequestConfiguration($headers) : null;
-        return $this->call($accessToken, fn($api) =>
-            $api->seller_standards_profile()->get($config)->wait()
+    /** @return array<string, string> */
+    private function mergedHeaders(?RequestOptions $requestOptions): array
+    {
+        return array_merge(
+            $this->config->defaultRequestOptions->headers,
+            $requestOptions !== null ? $requestOptions->headers : []
         );
     }
 
-    /**
-     * Retrieves a seller's performance rating for the customer service metric.
-     *
-     * @param string $customerServiceMetricType ITEM_NOT_AS_DESCRIBED or ITEM_NOT_RECEIVED
-     * @param string $evaluationType           CURRENT or PROJECTED
-     * @param string|null $evaluationMarketplaceId  e.g. EBAY_US
-     * @param string|null $accessToken         Per-call token; overrides config fallback.
-     * @param RequestOptions|null $requestOptions Per-call headers.
-     * @return GetCustomerServiceMetricResponse|null
-     */
     public function getCustomerServiceMetric(
         string $customerServiceMetricType,
         string $evaluationType,
         ?string $evaluationMarketplaceId = null,
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
-    ): ?GetCustomerServiceMetricResponse {
+    ): ?GetCustomerServiceMetricResponse
+    {
         $headers = $this->mergedHeaders($requestOptions);
-        $config = new WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
-            headers: $headers !== [] ? $headers : null,
-            queryParameters: $evaluationMarketplaceId !== null
-                ? new WithEvaluation_typeItemRequestBuilderGetQueryParameters($evaluationMarketplaceId)
-                : null,
-        );
         return $this->call($accessToken, fn($api) =>
-            $api->customer_service_metric()
-                ->byCustomer_service_metric_type($customerServiceMetricType)
-                ->byEvaluation_type($evaluationType)
-                ->get($config)
-                ->wait()
+            $api->customer_service_metric()->byCustomer_service_metric_type($customerServiceMetricType)->byEvaluation_type($evaluationType)->get(
+                new WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
+                    headers: $headers,
+                    queryParameters: WithEvaluation_typeItemRequestBuilderGetRequestConfiguration::createQueryParameters(
+                        evaluation_marketplace_id: $evaluationMarketplaceId,
+                    ),
+                )
+            )->wait()
         );
     }
 
-    /**
-     * Retrieves a single standards profile for the seller.
-     *
-     * @param string      $program     PROGRAM_DE, PROGRAM_GLOBAL, PROGRAM_MOTORS_US, or PROGRAM_US
-     * @param string      $cycle       CURRENT or PROJECTED
-     * @param string|null $accessToken Per-call token; overrides config fallback.
-     * @param RequestOptions|null $requestOptions Per-call headers.
-     * @return StandardsProfile|null
-     */
+    public function findSellerStandardsProfiles(?string $accessToken = null, ?RequestOptions $requestOptions = null): ?FindSellerStandardsProfilesResponse
+    {
+        $headers = $this->mergedHeaders($requestOptions);
+        return $this->call($accessToken, fn($api) =>
+            $api->seller_standards_profile()->get(
+                new Seller_standards_profileRequestBuilderGetRequestConfiguration(headers: $headers)
+            )->wait()
+        );
+    }
+
     public function getSellerStandardsProfile(
-        string $program,
         string $cycle,
+        string $program,
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
-    ): ?StandardsProfile {
+    ): ?StandardsProfile
+    {
         $headers = $this->mergedHeaders($requestOptions);
-        $config = $headers !== [] ? new WithCycleItemRequestBuilderGetRequestConfiguration($headers) : null;
         return $this->call($accessToken, fn($api) =>
-            $api->seller_standards_profile()
-                ->byProgram($program)
-                ->byCycle($cycle)
-                ->get($config)
-                ->wait()
+            $api->seller_standards_profile()->byProgram($program)->byCycle($cycle)->get(
+                new WithCycleItemRequestBuilderGetRequestConfiguration(headers: $headers)
+            )->wait()
         );
     }
 
-    /**
-     * Returns a traffic report for the seller's listings.
-     *
-     * @param string|null $dimension   DAY or LISTING
-     * @param string|null $filter      e.g. "marketplace_ids:{EBAY_US},date_range:[20240101..20240131]"
-     * @param string|null $metric      Comma-separated metrics, e.g. "CLICK_THROUGH_RATE,TRANSACTION"
-     * @param string|null $sort        Metric to sort by; prefix with "-" for descending
-     * @param string|null $accessToken Per-call token; overrides config fallback.
-     * @param RequestOptions|null $requestOptions Per-call headers.
-     * @return Report|null
-     */
     public function getTrafficReport(
         ?string $dimension = null,
         ?string $filter = null,
@@ -138,14 +103,21 @@ final class AnalyticsClient
         ?string $sort = null,
         ?string $accessToken = null,
         ?RequestOptions $requestOptions = null,
-    ): ?Report {
+    ): ?Report
+    {
         $headers = $this->mergedHeaders($requestOptions);
-        $config = new Traffic_reportRequestBuilderGetRequestConfiguration(
-            headers: $headers !== [] ? $headers : null,
-            queryParameters: new Traffic_reportRequestBuilderGetQueryParameters($dimension, $filter, $metric, $sort),
-        );
         return $this->call($accessToken, fn($api) =>
-            $api->traffic_report()->get($config)->wait()
+            $api->traffic_report()->get(
+                new Traffic_reportRequestBuilderGetRequestConfiguration(
+                    headers: $headers,
+                    queryParameters: Traffic_reportRequestBuilderGetRequestConfiguration::createQueryParameters(
+                        dimension: $dimension,
+                        filter: $filter,
+                        metric: $metric,
+                        sort: $sort,
+                    ),
+                )
+            )->wait()
         );
     }
 
@@ -164,14 +136,5 @@ final class AnalyticsClient
         $adapter = new GuzzleRequestAdapter($auth, guzzleClient: $this->guzzle);
         $adapter->setBaseUrl($this->config->analyticsBaseUrl);
         return new AnalyticsApiClient($adapter);
-    }
-
-    /** @return array<string,string> */
-    private function mergedHeaders(?RequestOptions $requestOptions): array
-    {
-        return array_merge(
-            $this->config->defaultRequestOptions->headers,
-            $requestOptions !== null ? $requestOptions->headers : []
-        );
     }
 }
