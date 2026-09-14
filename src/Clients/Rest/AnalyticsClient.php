@@ -26,10 +26,6 @@ use EBay\AnalyticsAndReporting\Generated\Analytics\Models\FindSellerStandardsPro
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\GetCustomerServiceMetricResponse;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\Report;
 use EBay\AnalyticsAndReporting\Generated\Analytics\Models\StandardsProfile;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Item\Item\WithCycleItemRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Seller_standards_profileRequestBuilderGetRequestConfiguration;
-use EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetRequestConfiguration;
 use GuzzleHttp\Client as GuzzleClient;
 use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
 use Microsoft\Kiota\Http\GuzzleRequestAdapter;
@@ -61,9 +57,9 @@ final class AnalyticsClient
         $headers = $this->mergedHeaders($requestOptions);
         return $this->call($accessToken, fn($api) =>
             $api->customer_service_metric()->byCustomer_service_metric_type($customerServiceMetricType)->byEvaluation_type($evaluationType)->get(
-                new WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
+                new \EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration(
                     headers: $headers,
-                    queryParameters: WithEvaluation_typeItemRequestBuilderGetRequestConfiguration::createQueryParameters(
+                    queryParameters: \EBay\AnalyticsAndReporting\Generated\Analytics\Customer_service_metric\Item\Item\WithEvaluation_typeItemRequestBuilderGetRequestConfiguration::createQueryParameters(
                         evaluation_marketplace_id: $evaluationMarketplaceId,
                     ),
                 )
@@ -76,7 +72,7 @@ final class AnalyticsClient
         $headers = $this->mergedHeaders($requestOptions);
         return $this->call($accessToken, fn($api) =>
             $api->seller_standards_profile()->get(
-                new Seller_standards_profileRequestBuilderGetRequestConfiguration(headers: $headers)
+                new \EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Seller_standards_profileRequestBuilderGetRequestConfiguration(headers: $headers)
             )->wait()
         );
     }
@@ -91,7 +87,7 @@ final class AnalyticsClient
         $headers = $this->mergedHeaders($requestOptions);
         return $this->call($accessToken, fn($api) =>
             $api->seller_standards_profile()->byProgram($program)->byCycle($cycle)->get(
-                new WithCycleItemRequestBuilderGetRequestConfiguration(headers: $headers)
+                new \EBay\AnalyticsAndReporting\Generated\Analytics\Seller_standards_profile\Item\Item\WithCycleItemRequestBuilderGetRequestConfiguration(headers: $headers)
             )->wait()
         );
     }
@@ -108,9 +104,9 @@ final class AnalyticsClient
         $headers = $this->mergedHeaders($requestOptions);
         return $this->call($accessToken, fn($api) =>
             $api->traffic_report()->get(
-                new Traffic_reportRequestBuilderGetRequestConfiguration(
+                new \EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetRequestConfiguration(
                     headers: $headers,
-                    queryParameters: Traffic_reportRequestBuilderGetRequestConfiguration::createQueryParameters(
+                    queryParameters: \EBay\AnalyticsAndReporting\Generated\Analytics\Traffic_report\Traffic_reportRequestBuilderGetRequestConfiguration::createQueryParameters(
                         dimension: $dimension,
                         filter: $filter,
                         metric: $metric,
