@@ -1,2 +1,4 @@
 vendor/
 .kiota/
+
+.DS_Store
